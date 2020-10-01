@@ -7,6 +7,8 @@ from imageio import imread, imwrite
 from scipy.ndimage.filters import convolve
 
 def calc_energy(img):
+    # calculation of frequency energy after passed 
+    # through the convolution filter
     filter_du = np.array([
         [1.0, 2.0, 1.0],
         [0.0, 0.0, 0.0],
@@ -29,6 +31,7 @@ def calc_energy(img):
     return energy_map
 
 def crop_c(img, scale_c):
+    # scalling of the image column-wise
     r, c, _ = img.shape
     new_c = int(scale_c * c)
 
@@ -38,12 +41,14 @@ def crop_c(img, scale_c):
     return img
 
 def crop_r(img, scale_r):
+    # scalling of the image row-wise
     img = np.rot90(img, 1, (0, 1))
     img = crop_c(img, scale_r)
     img = np.rot90(img, 3, (0, 1))
     return img
 
 def carve_column(img):
+    #deletion of rows logic
     r, c, _ = img.shape
 
     M, backtrack = minimum_seam(img)
@@ -59,6 +64,8 @@ def carve_column(img):
     return img
 
 def minimum_seam(img):
+    # recurrance relation of finding column/row
+    # with minimum change
     r, c, _ = img.shape
     energy_map = calc_energy(img)
 
